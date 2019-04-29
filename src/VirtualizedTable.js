@@ -2,27 +2,27 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 export default function VirtualizedTable(props) {
-
-  const {
-    data,
-  } = props;
+  const { data } = props;
   const [displayData, setDisplayData] = React.useState([]);
 
   const rowGetter = React.useCallback(
-    ({index}) => {
+    ({ index }) => {
       return displayData[index];
     },
-    [displayData],
+    [displayData]
   );
 
-  const applySortAndFilter = React.useCallback(async () => {
-    // removed for simplicity; sorting and filtering of the data array would have been done here
-    setDisplayData(data);
-  }, [data]);
+  const applySortAndFilter = React.useCallback(
+    async data => {
+      // removed for simplicity; sorting and filtering of the data array would have been done here
+      setDisplayData(data);
+    },
+    [setDisplayData]
+  );
 
   React.useEffect(() => {
-    applySortAndFilter();
-  }, [applySortAndFilter]);
+    applySortAndFilter(data);
+  }, [applySortAndFilter, data]);
 
   return (
     // greatly simplified (you can look at git history to see what this was)
@@ -33,7 +33,7 @@ export default function VirtualizedTable(props) {
     // calling rowGetter with an index instead of the actual array item.
     <>
       {displayData.map((row, index) => {
-        const item = rowGetter({index});
+        const item = rowGetter({ index });
         return <div key={index}>{item.name}</div>;
       })}
     </>
@@ -41,5 +41,5 @@ export default function VirtualizedTable(props) {
 }
 
 VirtualizedTable.propTypes = {
-  data: PropTypes.array.isRequired,
+  data: PropTypes.array.isRequired
 };
