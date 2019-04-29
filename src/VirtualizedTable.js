@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Table, Column, AutoSizer} from 'react-virtualized';
-// import SearchApi from 'js-worker-search';
 
 const HEADER_HEIGHT = 44;
 const ROW_HEIGHT = 40;
@@ -32,11 +31,8 @@ export default function VirtualizedTable(props) {
   const {
     data,
     children,
-    sort,
     sortBy: defaultSortBy,
     sortDirection: defaultSortDirection,
-    filter,
-    filterable,
     ...rest
   } = props;
   const [sortBy, setSortBy] = React.useState(defaultSortBy);
@@ -58,22 +54,10 @@ export default function VirtualizedTable(props) {
     [],
   );
 
-  const filterIndex = React.useMemo(() => {
-    return null;
-  }, []);
-
   const applySortAndFilter = React.useCallback(async () => {
-    if (filterIndex) {
-      const filteredData = [];
-      const indexes = await filterIndex.search(filter);
-      indexes.forEach(i => filteredData.push(data[i]));
-
-      const sortedData = (sort || defaultSort)(filteredData, sortBy, sortDirection);
-      setDisplayData(sortedData);
-    } else {
-      setDisplayData(data);
-    }
-  }, [filterIndex, filter, sort, sortBy, sortDirection, data]);
+    const sortedData = defaultSort(data, sortBy, sortDirection);
+    setDisplayData(sortedData);
+  }, [sortBy, sortDirection, data]);
 
   React.useEffect(() => {
     applySortAndFilter();
@@ -101,25 +85,11 @@ export default function VirtualizedTable(props) {
   );
 }
 
-VirtualizedTable.defaultProps = {
-  filterable: false,
-};
-
 VirtualizedTable.propTypes = {
-  /** The data to display */
   data: PropTypes.array.isRequired,
-  /** Column nodes */
   children: PropTypes.node,
-  /** A function to use to sort the data, use as an `array.sort` comparator (returns -1,0,1) */
-  sort: PropTypes.func,
-  /** The field name to sort by for the initial sort. Leaving this undefined will default to the natural order of the `data` array. */
   sortBy: PropTypes.string,
-  /** The initial sort direction. 'ASC' or 'DESC'. */
   sortDirection: PropTypes.oneOf(['ASC', 'DESC']),
-  /** Optionally a string to filter entries by. */
-  filter: PropTypes.string,
-  /** Whether or not this table will be searchable. When enabled, all data will be rendered to strings and indexed to facilitate filtering. */
-  filterable: PropTypes.bool,
 };
 
 VirtualizedTable.Column = Column;
