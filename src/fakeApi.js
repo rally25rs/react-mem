@@ -5,7 +5,7 @@ class Tracking {}
 export async function load() {
   return new Promise(resolve => {
     const data = [];
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 5; i++) {
       data.push({
         id: i,
         name: `Item ${i}`,
