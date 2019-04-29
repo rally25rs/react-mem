@@ -16,14 +16,7 @@ function App() {
           Load Data
         </button>
 
-        <VirtualizedTable data={data}>
-          <VirtualizedTable.Column
-            dataKey="name"
-            headerRenderer={() => <span>Name</span>}
-            cellRenderer={({cellData}) => <span>{cellData}</span>}
-            width={100}
-          />
-        </VirtualizedTable>
+        <VirtualizedTable data={data} />
       </div>
 
       <div style={{width: '90%', marginTop: '20px', marginLeft: '5%', border: '1px solid black', padding: '20px', boxSizing: 'border-box'}}>
